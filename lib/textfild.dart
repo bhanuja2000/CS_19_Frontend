@@ -122,7 +122,9 @@ class _TextFildState extends State<TextFild> {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('si1');
+                    },
                     icon: const Icon(Icons.facebook),
                   ),
                   IconButton(

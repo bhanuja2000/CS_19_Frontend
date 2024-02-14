@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textfild/profile.dart';
 import 'package:textfild/repassword.dart';
 import 'package:textfild/reset.dart';
 import 'package:textfild/signup.dart';
@@ -12,5 +13,6 @@ void main() => runApp(MaterialApp(
         'signup': (BuildContext context) => const Signup(),
         'sig': (BuildContext context) => const Repasssword(),
         'si': (BuildContext context) => const Reset(),
+        'si1': (BuildContext context) => const Profile(),
       },
     ));
