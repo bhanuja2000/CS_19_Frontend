@@ -3,6 +3,7 @@ import 'package:textfild/profile.dart';
 import 'package:textfild/repassword.dart';
 import 'package:textfild/reset.dart';
 import 'package:textfild/signup.dart';
+import 'package:textfild/subplan.dart';
 import 'package:textfild/textfild.dart';
 
 void main() => runApp(MaterialApp(
@@ -14,5 +15,6 @@ void main() => runApp(MaterialApp(
         'sig': (BuildContext context) => const Repasssword(),
         'si': (BuildContext context) => const Reset(),
         'si1': (BuildContext context) => const Profile(),
+        'si2': (BuildContext cotext) => const Subscription(),
       },
     ));

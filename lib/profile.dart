@@ -22,9 +22,9 @@ class _ProfileState extends State<Profile> {
                         onTap: () => print("Traval Hestory"),
                       ),
                       PopupMenuItem(
-                        value: "second item",
+                        value: "Subscription Plans",
                         child: const Text("preferred contacts"),
-                        onTap: () => print("preferred contacts"),
+                        onTap: () => Navigator.of(context).pushNamed('si2'),
                       ),
                       PopupMenuItem(
                         value: "third item",
@@ -118,7 +118,7 @@ class _ProfileState extends State<Profile> {
               style: TextStyle(fontSize: 15),
             ),
           ),
-          Divider(
+          const Divider(
             thickness: 3,
             color: Colors.grey,
             indent: 10,

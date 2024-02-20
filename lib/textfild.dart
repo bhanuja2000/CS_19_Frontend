@@ -128,7 +128,9 @@ class _TextFildState extends State<TextFild> {
                     icon: const Icon(Icons.facebook),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('si2');
+                    },
                     icon: Image.asset(
                       'assets/google.png',
                       height: 30,
