@@ -14,7 +14,7 @@ class _SubscriptionState extends State<Subscription> {
     double screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF3366FF),
+        backgroundColor:const  Color(0xFF3366FF),
       ),
       body: Container(
         height: screenHeight,
@@ -28,11 +28,11 @@ class _SubscriptionState extends State<Subscription> {
                 Color(0xFF003366),
               ]),
         ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        child: const Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Text(
             "Subscribe to Premium ",
             style: TextStyle(
-                color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700),
+                color: Colors.white, fontSize: 23, fontWeight: FontWeight.w700,fontFamily: ),
           )
         ]),
       ),
