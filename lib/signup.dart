@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -36,6 +39,46 @@ class _SignupState extends State<Signup> {
   //     ),
   //   );
   // }
+  void signup(
+    String name,
+    password,
+    email,
+  ) async {
+    var url = Uri.http('localhost:8080', 'sign-up');
+    try {
+      var response = await http.post(url, body: {
+        'userName': name,
+        'userEmail': email,
+        'userMobileNo': '0754806795',
+        'userPassword': password,
+        "userRole": 'ROLE_USER'
+      });
+      if (response.statusCode == 200) {
+        print("sucsess fully registation");
+      }
+    } catch (e) {
+      e.toString();
+    }
+  }
+
+  void okay() async {
+    var url = Uri.http('localhost:8080', 'sign-up');
+    try {
+      var response = await http.post(url, body: {
+        'userName': 'ravidu',
+        'userEmail': 'gmail@.com',
+        'userMobileNo': '0754806795',
+        'userPassword': '123',
+        "userRole": 'ROLE_USER'
+      });
+      if (response.statusCode == 200) {
+        print("sucsess fully registation");
+      }
+    } catch (e) {
+      e.toString();
+    }
+  }
+
   bool Passwordcheck() {
     if (_Password == _ConfirmPassword) {
       return true;
@@ -44,7 +87,7 @@ class _SignupState extends State<Signup> {
   }
 
   Widget h(String hintText, Icon icon, String fildname,
-      Function(String) updatevaribale) {
+      Function(String) updatevaribale, TextEditingController controller) {
     return Container(
       padding: const EdgeInsets.all(0),
       margin: const EdgeInsets.all(16),
@@ -56,6 +99,7 @@ class _SignupState extends State<Signup> {
           }
           return null;
         },
+        controller: controller,
         onSaved: (text) {
           updatevaribale(text!);
         },
@@ -65,6 +109,11 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController name = TextEditingController();
+    TextEditingController email = TextEditingController();
+    //TextEditingController mobile_number = TextEditingController();
+    TextEditingController password = TextEditingController();
+    String? MobileNumber;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -95,19 +144,24 @@ class _SignupState extends State<Signup> {
             child: Column(
               children: [
                 h("Name", const Icon(Icons.person), "Name",
-                    (text) => _name = text),
+                    (text) => _name = text, name),
                 h("email", const Icon(Icons.email), "Email", (text) {
                   _email = text;
-                }),
+                }, email),
                 h("Password", const Icon(Icons.password), "Password",
-                    (p0) => _Password = p0),
-                h("Confirm Password", const Icon(Icons.text_decrease),
-                    "Confirm Password", (p0) => _ConfirmPassword = p0),
+                    (p0) => _Password = p0, password),
+                h(
+                    "Confirm Password",
+                    const Icon(Icons.text_decrease),
+                    "Confirm Password",
+                    (p0) => _ConfirmPassword = p0,
+                    password),
                 Container(
                   margin: const EdgeInsets.all(2),
                   padding: const EdgeInsets.all(5),
                   child: InternationalPhoneNumberInput(
-                      onInputChanged: (value) => _mobileNumber = value),
+                      onInputChanged: (value) =>
+                          MobileNumber = value.toString()),
                 ),
                 const SizedBox(
                   height: 10,
@@ -117,10 +171,7 @@ class _SignupState extends State<Signup> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          print(_name);
-                          print(_email);
-                          print(_mobileNumber);
-                          print(Passwordcheck());
+
                           if (!Passwordcheck()) {
                             showDialog(
                                 context: context,
@@ -139,7 +190,12 @@ class _SignupState extends State<Signup> {
                                   );
                                 });
                           } else {
-                            // save data to data base
+                            print("okay");
+                            signup(
+                              name.text.toString(),
+                              password.text.toString(),
+                              email.text.toString(),
+                            );
                           }
                         }
                       },

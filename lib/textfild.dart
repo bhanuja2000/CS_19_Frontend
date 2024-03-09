@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class TextFild extends StatefulWidget {
   const TextFild({Key? key}) : super(key: key);
@@ -9,10 +12,52 @@ class TextFild extends StatefulWidget {
 
 class _TextFildState extends State<TextFild> {
   bool _isPasswordVisible = false;
+  void login(String username, password, BuildContext context) async {
+    var url = Uri.http('localhost:8080', 'sign-in');
+    try {
+      String basicAuth =
+          'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+      var response = await http.post(
+        url,
+        headers: {
+          'Authorization': basicAuth,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      );
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        var jwttoken = jsonResponse['access_token'];
+        print(jwttoken);
+        Navigator.of(context).pushNamed('si1');
+      } else {
+        print(response.statusCode);
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Try Again"),
+                content: Text("Password OR Username Not Correct!"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('okay'),
+                  )
+                ],
+              );
+            });
+      }
+    } catch (e) {
+      Future.error(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     const EdgeInsets padding = EdgeInsets.only(top: 50);
+    TextEditingController password = TextEditingController();
+    TextEditingController username = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -55,18 +100,17 @@ class _TextFildState extends State<TextFild> {
             child: Column(
               children: [
                 TextField(
+                  controller: username,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person_2),
                     hintText: 'User Name',
                   ),
                   autofocus: true,
                   cursorColor: Colors.blue,
-                  onChanged: (text) {
-                    print(text);
-                  },
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  controller: password,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.password),
                     hintText: "Password",
@@ -110,7 +154,10 @@ class _TextFildState extends State<TextFild> {
             child: Container(
               width: 200,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  login(username.text.toString(), password.text.toString(),
+                      context);
+                },
                 child: Text("Login"),
               ),
             ),
