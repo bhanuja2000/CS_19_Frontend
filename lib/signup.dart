@@ -61,21 +61,30 @@ class _SignupState extends State<Signup> {
     }
   }
 
-  void okay() async {
+  void okay(String name, email, moblenumber, password, role) async {
     var url = Uri.http('localhost:8080', 'sign-up');
     try {
-      var response = await http.post(url, body: {
-        'userName': 'ravidu',
-        'userEmail': 'gmail@.com',
-        'userMobileNo': '0754806795',
-        'userPassword': '123',
-        "userRole": 'ROLE_USER'
-      });
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json', // Update content type
+        },
+        body: jsonEncode({
+          'userName': name,
+          'userEmail': email,
+          'userMobileNo': moblenumber,
+          'userPassword': password,
+          'userRole': role
+        }),
+      );
+
       if (response.statusCode == 200) {
-        print("sucsess fully registation");
+        print("Successfully registered");
+      } else {
+        print("Registration failed with status code: ${response.statusCode}");
       }
     } catch (e) {
-      e.toString();
+      print("Error during registration: $e");
     }
   }
 
@@ -111,9 +120,12 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     TextEditingController name = TextEditingController();
     TextEditingController email = TextEditingController();
-    //TextEditingController mobile_number = TextEditingController();
     TextEditingController password = TextEditingController();
-    String? MobileNumber;
+    TextEditingController mobile = TextEditingController();
+    TextEditingController role = TextEditingController();
+    TextEditingController conpassword = TextEditingController();
+
+    //TextEditingController mobile_number = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -155,13 +167,13 @@ class _SignupState extends State<Signup> {
                     const Icon(Icons.text_decrease),
                     "Confirm Password",
                     (p0) => _ConfirmPassword = p0,
-                    password),
+                    conpassword),
                 Container(
                   margin: const EdgeInsets.all(2),
                   padding: const EdgeInsets.all(5),
                   child: InternationalPhoneNumberInput(
                       onInputChanged: (value) =>
-                          MobileNumber = value.toString()),
+                          mobile.text = value.toString()),
                 ),
                 const SizedBox(
                   height: 10,
@@ -190,12 +202,12 @@ class _SignupState extends State<Signup> {
                                   );
                                 });
                           } else {
-                            print("okay");
-                            signup(
-                              name.text.toString(),
-                              password.text.toString(),
-                              email.text.toString(),
-                            );
+                            okay(
+                                name.text.toString(),
+                                email.text.toString(),
+                                mobile.text.toString(),
+                                password.text.toString(),
+                                'non-premium-user');
                           }
                         }
                       },
