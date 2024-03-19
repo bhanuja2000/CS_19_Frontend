@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:textfild/passwordreset.dart';
 import 'package:textfild/profile.dart';
 import 'package:textfild/repassword.dart';
 import 'package:textfild/reset.dart';
@@ -10,7 +11,7 @@ import 'package:textfild/verification.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Session(),
+      home: PasswordResetPage(),
       routes: <String, WidgetBuilder>{
         'register': (BuildContext context) => const TextFild(),
         'signup': (BuildContext context) => const Signup(),
