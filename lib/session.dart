@@ -41,12 +41,9 @@ class _SessionState extends State<Session> {
 
       print('Latitude: $latitude, Longitude: $longitude');
 
-      // Call the method to get the address from Google Maps Geocoding API
       await getAddressFromApi(latitude!, longitude!);
     }
   }
-
-  // ... (previous code)
 
   Future<void> getAddressFromApi(double lat, double long) async {
     final apiKey = 'AIzaSyA8DfNNCPm--UmVeJy-AEEoz48_h3Q0td8';
@@ -58,7 +55,7 @@ class _SessionState extends State<Session> {
 
       if (response.statusCode == 200) {
         final decodedBody = json.decode(response.body);
-        print('Decoded Body: $decodedBody'); // Print the entire decoded body
+        //print('Decoded Body: $decodedBody');
 
         final results = decodedBody['results'];
         if (results != null && results.isNotEmpty) {
@@ -90,7 +87,7 @@ class _SessionState extends State<Session> {
         children: [
           if (latitude != null && longitude != null)
             Text(
-              'This is Your Location Latitude: $latitude, Longitude: $longitude',
+              'This is Your Location $address',
               style: TextStyle(fontSize: 14),
             ),
           Container(margin: EdgeInsets.all(16), child: _buildSearchBar()),
