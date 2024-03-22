@@ -3,9 +3,12 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:textfild/main_page/home_page.dart';
+import 'package:textfild/textfild.dart';
 
 class Signup extends StatefulWidget {
-  const Signup({super.key});
+  late String jwttokken;
+  Signup({super.key, required this.jwttokken});
 
   @override
   State<Signup> createState() => _SignupState();
@@ -44,7 +47,7 @@ class _SignupState extends State<Signup> {
     password,
     email,
   ) async {
-    var url = Uri.http('localhost:8080', 'sign-up');
+    var url = Uri.http('10.0.2.2:8080', 'sign-up');
     try {
       var response = await http.post(url, body: {
         'userName': name,
@@ -62,7 +65,7 @@ class _SignupState extends State<Signup> {
   }
 
   void okay(String name, email, moblenumber, password, role) async {
-    var url = Uri.http('localhost:8080', 'sign-up');
+    var url = Uri.http('10.0.2.2:8080', 'sign-up');
     try {
       var response = await http.post(
         url,
@@ -79,7 +82,10 @@ class _SignupState extends State<Signup> {
       );
 
       if (response.statusCode == 200) {
-        print("Successfully registered");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TextFild()),
+        );
       } else {
         print("Registration failed with status code: ${response.statusCode}");
       }
@@ -130,98 +136,100 @@ class _SignupState extends State<Signup> {
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
-      body: Column(children: [
-        Image.asset(
-          'assets/sign.jpg',
-          height: 150,
-          width: double.infinity,
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        const Row(
-          children: [
-            Text(
-              "Sign Up",
-              style: TextStyle(fontSize: 38, fontWeight: FontWeight.w400),
-            )
-          ],
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                h("Name", const Icon(Icons.person), "Name",
-                    (text) => _name = text, name),
-                h("email", const Icon(Icons.email), "Email", (text) {
-                  _email = text;
-                }, email),
-                h("Password", const Icon(Icons.password), "Password",
-                    (p0) => _Password = p0, password),
-                h(
-                    "Confirm Password",
-                    const Icon(Icons.text_decrease),
-                    "Confirm Password",
-                    (p0) => _ConfirmPassword = p0,
-                    conpassword),
-                Container(
-                  margin: const EdgeInsets.all(2),
-                  padding: const EdgeInsets.all(5),
-                  child: InternationalPhoneNumberInput(
-                      onInputChanged: (value) =>
-                          mobile.text = value.toString()),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-
-                          if (!Passwordcheck()) {
-                            showDialog(
-                                context: context,
-                                builder: (contex) {
-                                  return AlertDialog(
-                                    title: const Text("About Password Fild"),
-                                    content:
-                                        const Text("password do not match"),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("OK"))
-                                    ],
-                                  );
-                                });
-                          } else {
-                            okay(
-                                name.text.toString(),
-                                email.text.toString(),
-                                mobile.text.toString(),
-                                password.text.toString(),
-                                'non-premium-user');
-                          }
-                        }
-                      },
-                      child: const Text(
-                        "submit",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w400),
-                      )),
-                )
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Column(children: [
+          Image.asset(
+            'assets/sign.jpg',
+            height: 150,
+            width: double.infinity,
           ),
-        )
-      ]),
+          const SizedBox(
+            height: 15,
+          ),
+          const Row(
+            children: [
+              Text(
+                "Sign Up",
+                style: TextStyle(fontSize: 38, fontWeight: FontWeight.w400),
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  h("Name", const Icon(Icons.person), "Name",
+                      (text) => _name = text, name),
+                  h("email", const Icon(Icons.email), "Email", (text) {
+                    _email = text;
+                  }, email),
+                  h("Password", const Icon(Icons.password), "Password",
+                      (p0) => _Password = p0, password),
+                  h(
+                      "Confirm Password",
+                      const Icon(Icons.text_decrease),
+                      "Confirm Password",
+                      (p0) => _ConfirmPassword = p0,
+                      conpassword),
+                  Container(
+                    margin: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(5),
+                    child: InternationalPhoneNumberInput(
+                        onInputChanged: (value) =>
+                            mobile.text = value.toString()),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+
+                            if (!Passwordcheck()) {
+                              showDialog(
+                                  context: context,
+                                  builder: (contex) {
+                                    return AlertDialog(
+                                      title: const Text("About Password Fild"),
+                                      content:
+                                          const Text("password do not match"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("OK"))
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              okay(
+                                  name.text.toString(),
+                                  email.text.toString(),
+                                  mobile.text.toString(),
+                                  password.text.toString(),
+                                  'non-premium-user');
+                            }
+                          }
+                        },
+                        child: const Text(
+                          "submit",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w400),
+                        )),
+                  )
+                ],
+              ),
+            ),
+          )
+        ]),
+      ),
     );
   }
 }

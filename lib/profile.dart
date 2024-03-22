@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:textfild/textfild.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final String jwttoken;
+  final String email;
+  const Profile({super.key, required this.jwttoken, required this.email});
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -15,18 +18,18 @@ class _ProfileState extends State<Profile> {
   TextEditingController email = new TextEditingController();
   TextEditingController mobilenumber = new TextEditingController();
   TextEditingController account = new TextEditingController();
-  String jwtToken =
-      "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJCaGFudWphIiwic3ViIjoiYnNhdGhzYXJhQGdtYWlsLmNvbSIsImV4cCI6MTcxMDg0NzY5OSwiaWF0IjoxNzEwODQ2Nzk5LCJzY29wZSI6IlJFQUQifQ.m0AoxePmgqHVumZDqidzH-LpICCTDniGPaBitSEs-3obnaumfxMhZlmWARcYd9ebyUV6UIB_tEIVwBgiK9Gdo3A5rvw8WW3CSpsldiSSx4iT9V6DKGrjlJU6247fQJMjJOaGUiIePVFykloEM4_ZpEap3Ot-PJEhJxd6YCR6jvpKwfkCFKhgBXt1bUv6st80gQjXpJUkJqvdTX-8td0SQn4sSMjxQB-YBEXFvt28YZKrgk6AiXDs4PRVWqj6Of3MknezmSgxDNeBfRUeSrT-hqF6OmNPBRIsiwxP5jSyIkMO2jCBC_fBjxxameREz4Drp0IH_BoaKid3j31al8ldEQ";
+
   void okay() async {
-    var url = Uri.http('localhost:8080', '/api/findemail');
+    var url = Uri.http('10.0.2.2:8080', '/api/findemail');
     try {
+      String token = widget.jwttoken;
       var response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $jwtToken',
+          'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({"email": "tarandu@gmail.com"}),
+        body: jsonEncode({"email": widget.email}),
       );
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonMap = jsonDecode(response.body);
@@ -249,7 +252,13 @@ class _ProfileState extends State<Profile> {
             child: SizedBox(
               width: 200,
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TextFild(),
+                        ));
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.yellow,
                       side: BorderSide.none,

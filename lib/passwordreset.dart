@@ -1,31 +1,94 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:textfild/profile.dart';
+import 'package:textfild/textfild.dart';
+//conformation number entering page
 
 class PasswordResetPage extends StatelessWidget {
+  PasswordResetPage({
+    super.key,
+  });
+  TextEditingController confomation_number = TextEditingController();
   TextEditingController password = TextEditingController();
-  String jwtToken =
-      "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJCaGFudWphIiwic3ViIjoiYnNhdGhzYXJhQGdtYWlsLmNvbSIsImV4cCI6MTcxMDg0Nzc3NSwiaWF0IjoxNzEwODQ2ODc1LCJzY29wZSI6IlJFQUQifQ.epdCPZHRsSELcjh-sgx_WHH0djOh0Z_9bJXab3VkyJxH1Hp2EeH7JOsPLvkM_xzOKn6g7msSR8aWo7Gh-RfnMz_CoUq3R-x6BH8lSQpvMIvWMJDUPLXuGP0kRSG2kH2mfSB2mrKMp1ZWnXjUWi1UUajz6xuTBHGSZ6xAc-49UXRRe_K8tc4q9ngEu-dYBuDthlfQvj_JQelWEV76GqVDfaiGiJ9Jd23-X96lywrYv5DiBRhQMwmI1HTEV9FF0xMHQf70kzhb_f07jwFtQ5Cd-fPBCCa2eiYdR-KVItJQ76K2k6iwgSMv45hyw7fwFfdK3kfwU9jPh1xR6OmFY9Pyow";
-  void fetchpassword(String pass, BuildContext context) async {
+
+  Future<void> checkconfo(BuildContext context) async {
     try {
-      var url = Uri.http('localhost:8080', '/api/passwordreset');
+      var url = Uri.http('10.0.2.2:8080', '/api2/confomation');
       var response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $jwtToken',
         },
-        body: jsonEncode({"email": "bsathsara@gmail.com", "password": pass}),
+        body: jsonEncode({"confomation": confomation_number.text}),
       );
-
-      if (response.statusCode == 200) {
-        print("Successfully update" + response.body);
-        showPasswordUpdateSuccess(context);
+      if (response.body == "true") {
+        var url = Uri.http('10.0.2.2:8080', '/api2/passwordreset');
+        var response2 = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(
+              {"email": "bsathsara@gmail.com", "password": password.text}),
+        );
+        if (response2.body == "okay") {
+          showPasswordUpdateSuccess(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Passord not correct'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       } else {
-        print("Registration failed with status code: ${response.statusCode}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('confomation number not correct'),
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void fetchpassword(String pass, BuildContext context) async {
+    try {
+      // if (await checkconfo()) {
+      //   print("okay");
+      // } else {
+      //   print("not");
+      // }
+      // if (await checkconfo()) {
+      //   var url = Uri.http('10.0.2.2:8080', '/api/passwordreset');
+      //   var response = await http.post(
+      //     url,
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       'Authorization': 'Bearer $jwtToken',
+      //     },
+      //     body: jsonEncode({"email": "bsathsara@gmail.com", "password": pass}),
+      //   );
+      //   if (response.statusCode == 200) {
+      //     showPasswordUpdateSuccess(context);
+      //   } else {
+      //     print("Successfully update" + response.body);
+      //   }
+      // } else {
+      //   print(confomation_number.text);
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('confomation number not correct'),
+      //       duration: Duration(seconds: 2),
+      //     ),
+      //   );
+      // }
     } catch (e) {
       print("Error during registration: $e");
     }
@@ -44,11 +107,22 @@ class PasswordResetPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'Enter your New Password',
+              'Enter Confomation Number And New Password',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18.0),
             ),
             const SizedBox(height: 20.0),
+            TextFormField(
+              controller: confomation_number,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                labelText: 'Confomation Number',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             TextFormField(
               controller: password,
               keyboardType: TextInputType.emailAddress,
@@ -60,8 +134,8 @@ class PasswordResetPage extends StatelessWidget {
             const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                fetchpassword(password.text.toString(), context);
-                print(password.text);
+                //fetchpassword(password.text.toString(), context);
+                checkconfo(context);
               },
               child: Text('Reset Password'),
             ),
@@ -75,13 +149,13 @@ class PasswordResetPage extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Password updated successfully!'),
-        duration: Duration(seconds: 2), // Adjust duration as needed
+        duration: Duration(seconds: 2),
       ),
     );
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Profile()),
+        MaterialPageRoute(builder: (context) => const TextFild()),
       );
     });
   }

@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:textfild/repassword.dart';
+import 'package:textfild/textfild.dart';
+//final page
 
 class Reset extends StatefulWidget {
   const Reset({super.key});
@@ -8,6 +14,33 @@ class Reset extends StatefulWidget {
 }
 
 class _ResetState extends State<Reset> {
+  // void fetchpassword(String pass, BuildContext context) async {
+  //   try {
+  //     var url = Uri.http('10.0.2.2:8080', '/api/emailfound');
+  //     var response = await http.post(
+  //       url,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $jwtToken',
+  //       },
+  //       body: jsonEncode({
+  //         "email": "bsathsara@gmail.com",
+  //       }),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //     } else {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const Repasssword()),
+  //       );
+  //       print("Registration failed with status code: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     print("Error during registration: $e");
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +49,11 @@ class _ResetState extends State<Reset> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('register');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TextFild(),
+                    ));
               },
               icon: const Icon(Icons.clear))
         ],
@@ -51,7 +88,11 @@ class _ResetState extends State<Reset> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).pushNamed('register');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const TextFild(),
+                                ));
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
