@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:textfild/QRGenerator.dart';
 import 'package:textfild/textfild.dart';
 
 class Profile extends StatefulWidget {
@@ -72,7 +73,14 @@ class _ProfileState extends State<Profile> {
                       PopupMenuItem(
                         value: "Subscription Plans",
                         child: const Text("preferred contacts"),
-                        onTap: () => Navigator.of(context).pushNamed('si2'),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyApp(
+                                email: widget.email,
+                                jwt: widget.jwttoken,
+                              ),
+                            )),
                       ),
                       PopupMenuItem(
                         value: "third item",

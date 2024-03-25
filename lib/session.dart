@@ -230,7 +230,18 @@ class _SessionState extends State<Session> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Session')),
+      appBar: AppBar(
+        title: const Text('Session'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    HomePage(jwttoken: widget.jwttoken, email: widget.email),
+              )),
+        ),
+      ),
       body: Column(
         children: [
           if (latitude != null && longitude != null)
